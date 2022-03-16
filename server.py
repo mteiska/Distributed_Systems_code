@@ -2,6 +2,8 @@ import socket
 from threading import Thread
 import time
 
+from pip import main
+
 
 SERVER_PORT = 5002 # Port to open server with
 SERVER_HOST = "0.0.0.0" #Server uses this as IP
@@ -132,21 +134,19 @@ def listen_clients(client_socket):
         client_sockets.remove(client_socket)
         pass
         
-        
-
-
-while True:
-
-    # Listen for new connections
-    client_socket, client_address = s.accept()
-    print(f" New user: {client_address} connected.")
-    # add to clients list.
-    client_sockets.add(client_socket)
-    # start a new thread that listens for each client's messages
-    
-    thread = Thread(target=listen_clients, args=(client_socket,)) #create thread to listen for clients and receiveing their message. 
-    # if main thread ends so do all client threads so set them as deamon since "The daemon process will continue to run as long as the main process 
-    # is executing and it will terminate after finishing its execution or when the main program would be killed."
-    thread.daemon = True
-    # start the thread
-    thread.start()
+if __name__ == "__main__":
+  while True:
+  
+      # Listen for new connections
+      client_socket, client_address = s.accept()
+      print(f" New user: {client_address} connected.")
+      # add to clients list.
+      client_sockets.add(client_socket)
+      # start a new thread that listens for each client's messages
+      
+      thread = Thread(target=listen_clients, args=(client_socket,)) #create thread to listen for clients and receiveing their message. 
+      # if main thread ends so do all client threads so set them as deamon since "The daemon process will continue to run as long as the main process 
+      # is executing and it will terminate after finishing its execution or when the main program would be killed."
+      thread.daemon = True
+      # start the thread
+      thread.start()
