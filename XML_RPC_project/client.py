@@ -17,9 +17,10 @@ while True:
         if choice == 1:
                 
             topic = input("Give a Topic for note: ")
+            title = input("Give a title for a note: ")
             text = input ("Give a Text for note:" )
             timestamp = datetime.datetime.now()
-            proxy.send_note(topic,text,timestamp)
+            proxy.send_note(topic,title,text,timestamp)
         if choice == 2:
             topic = input("Give a Topic for search: ")
             Notes = proxy.search_note(topic)

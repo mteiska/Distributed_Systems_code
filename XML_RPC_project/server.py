@@ -6,48 +6,42 @@ import xml.etree.ElementTree as ET
 import os
 class RequestHandler(SimpleXMLRPCRequestHandler):
    rpc_paths = ('/RPC2',)
-class Note():
-    topic = '',
-    text = " ",
-    timestamp = datetime.datetime
 
-list_of_notes =[]
+
+
 with SimpleXMLRPCServer(('localhost', 9000),
                         requestHandler=RequestHandler, allow_none=True) as server:
    
-   def send_note(topic, text, timestamp):
-      note = Note
-      note.topic = topic
-      note.text = text
-      note.timestamp = timestamp
-      list_of_notes.append(note)
+   def send_note(topic,title, text, timestamp):
       #########Creating XML and adding topic if new###########
-      if os.path.exists("notes.xml"):
-         tree = ET.parse('notes.xml')
+      try:
+         if (os.path.exists("db.xml")) == False:
+            root = ET.Element("data")
+            tree = ET.ElementTree(root)
+            tree.write("db.xml")
+         tree = ET.parse('db.xml')
          root = tree.getroot()
-         for event in root.findall("Topic"):
-            new_topic = event.find(topic)
-            if new_topic is None:
-               userElement = ET.Element("Topic")
-               topic1 = ET.SubElement(userElement, topic)
-               note1 = ET.SubElement(topic1, "Text")
-               note1.text = text
-               timestampElement = ET.SubElement(note1, "timestamp")
-               timestampElement.text = str(timestamp)
-               root.insert(1, topic1)
+         new_topic = root.find("topic[@name='{}']".format(topic))
+         if new_topic is None:
+            new_topic = ET.SubElement(root,"topic", name=topic)
+         noteElement = ET.SubElement(new_topic, "note", name=title)
+        
+         note1 = ET.SubElement(new_topic, "Text")
+         note1.text = text
+         timestampElement = ET.SubElement(noteElement, "timestamp")
+         timestampElement.text = str(timestamp)
+         tree.write("db.xml")
+         print("Note is created with topic", topic)
 
+      except Exception as e:
+         print("Something went wrong with error:", e)
 
-      else:
-         root = ET.Element("Notes")
-         topic_header = ET.Element("Topic")
-         root.append (topic_header)
-         print("Creating the tree structure write your topic and note once more to be added.")
+      
+
     
             
         
-      tree = ET.ElementTree(root)
-      with open ("notes.xml", "wb") as files :
-         tree.write(files)
+     
 
       
 
