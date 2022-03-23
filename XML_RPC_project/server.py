@@ -15,12 +15,14 @@ with SimpleXMLRPCServer(('localhost', 9000),
    def send_note(topic,title, text, timestamp):
       #########Creating XML and adding topic if new###########
       try:
+         #if xml does not exist create it and root
          if (os.path.exists("db.xml")) == False:
             root = ET.Element("data")
             tree = ET.ElementTree(root)
             tree.write("db.xml")
          tree = ET.parse('db.xml')
          root = tree.getroot()
+         #Had to change xml structure since i did not see that it had example structure.
          new_topic = root.find("topic[@name='{}']".format(topic))
          if new_topic is None:
             new_topic = ET.SubElement(root,"topic", name=topic)
@@ -30,7 +32,11 @@ with SimpleXMLRPCServer(('localhost', 9000),
          note1.text = text
          timestampElement = ET.SubElement(noteElement, "timestamp")
          timestampElement.text = str(timestamp)
-         tree.write("db.xml")
+         tree = ET.ElementTree(root)
+         with open ("db.xml", "wb") as files :
+            tree.write(files)
+
+
          print("Note is created with topic", topic)
 
       except Exception as e:
