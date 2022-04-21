@@ -9,6 +9,7 @@ def shortest_search(start, end):
 
     while len(Q) != 0:
         page = Q.popleft()
+        
         links = helper.fetch_links(page) #Gets links
 
         for link in links:

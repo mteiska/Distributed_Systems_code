@@ -15,7 +15,10 @@ def main():
 
     
     #helper.fetch_wikipedia_pages_info(page_ids)
-
-    path = database.shortest_search(source_title, target_title)
-    print("Shortest path is", path,"With lenght of", len(path))
+    try:
+        path = database.shortest_search(source_title, target_title)
+        print("Shortest path is", path,"With lenght of", len(path))
+    except Exception as e:
+        print("Error occured with a name of ", e)
+        pass
 main()
